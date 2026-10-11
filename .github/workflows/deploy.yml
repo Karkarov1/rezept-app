@@ -25,7 +25,7 @@ jobs:
         with:
           channel: stable
       - name: Quellcode entpacken
-        run: unzip -q rezept_app_flutter_prototyp_v0_2.zip -d source
+        run: unzip -q rezept_app_flutter_prototyp_v0_3.zip -d source
       - name: Webprojekt anlegen und Tests ausfuehren
         working-directory: source/rezept_app_flutter_prototyp
         run: |
