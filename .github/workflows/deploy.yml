@@ -1,1 +1,55 @@
+name: Rezept-App im Browser
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt abrufen
+        uses: actions/checkout@v4
+      - name: Flutter einrichten
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Quellcode entpacken
+        run: unzip -q rezept_app_flutter_prototyp_v0_1.zip -d source
+      - name: Webprojekt anlegen und Tests ausfuehren
+        working-directory: source/rezept_app_flutter_prototyp
+        run: |
+          flutter create --project-name rezept_app --platforms=web .
+          flutter pub get
+          flutter test
+      - name: Web-App bauen
+        working-directory: source/rezept_app_flutter_prototyp
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+      - name: GitHub Pages konfigurieren
+        uses: actions/configure-pages@v5
+      - name: Webseite hochladen
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: source/rezept_app_flutter_prototyp/build/web
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Webseite veroeffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4
 
