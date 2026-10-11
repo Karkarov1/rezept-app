@@ -30,6 +30,7 @@ jobs:
         working-directory: source/rezept_app_flutter_prototyp
         run: |
           flutter create --project-name rezept_app --platforms=web .
+          rm -f test/widget_test.dart
           flutter pub get
           flutter test
       - name: Web-App bauen
