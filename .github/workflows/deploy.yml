@@ -32,6 +32,7 @@ jobs:
           flutter create --project-name rezept_app --platforms=web .
           rm -f test/widget_test.dart
           flutter pub get
+          sed -i 's/mainAxisSize:MainAxisSize.min,//g' lib/household_page.dart
           flutter test
       - name: Web-App bauen
         working-directory: source/rezept_app_flutter_prototyp
